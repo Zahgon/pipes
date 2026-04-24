@@ -14,27 +14,7 @@ from textwrap import dedent
 class _PipeTransformer(NodeTransformer):
 
     def visit_BinOp(self, node):
-        if isinstance(node.op, (LShift, RShift)):
-            # Convert function name / lambda etc without braces into call
-            if not isinstance(node.right, Call):
-                return self.visit(Call(
-                    func=node.right,
-                    args=[node.left],
-                    keywords=[],
-                    starargs=None,
-                    kwargs=None,
-                    lineno=node.right.lineno,
-                    col_offset=node.right.col_offset
-                ))
-            else:
-                # Rewrite a >> b(...) as b(a, ...)
-                node.right.args.insert(
-                    0 if isinstance(node.op, RShift) else len(node.right.args),
-                    node.left)
-                return self.visit(node.right)
-
-        else:
-            return node
+        pass
 
 
 def pipes(func_or_class):
